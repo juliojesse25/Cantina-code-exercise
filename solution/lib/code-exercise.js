@@ -48,10 +48,9 @@ function reader(parentSubview, userInput){
     //const numberOfSubviews = parentSubview.length
     //console.log(numberOfSubviews)
     parentSubview.map(view =>{
-      if (view['class'] === userInput ){
+      if (filterSelector(view, userInput)){
         answer.push(view)
         //console.log(view.class)
-        console.log(view)
         //console.log(view['subviews'])
       }
       if(view['subviews']){
@@ -61,11 +60,11 @@ function reader(parentSubview, userInput){
         if(view['contentView']['subviews'].length){
           const contentSubview = view['contentView']['subviews']
           contentSubview.map(element =>{
-            if (element['class'] === userInput ){
+            if (filterSelector(element, userInput) ){
               answer.push(element)
             }
             if(element['control']){
-              if (element['control']['class'] === userInput ){
+              if (filterSelector(element['control'], userInput)){
                 answer.push(element)
               }
             }
@@ -75,6 +74,18 @@ function reader(parentSubview, userInput){
       }
     })
   }
+}
+function filterSelector(node, userInput){
+  if(
+    node['identifier'] === userInput  || node['class'] === userInput
+  ){
+    return true
+  } else if (
+    node['classNames'] && node['classNames'].indexOf(userInput) >= 0
+  ){
+    return true
+  }
+  return false
 }
 
 function printAnswers(answers){
